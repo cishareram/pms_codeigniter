@@ -9,7 +9,7 @@ error_reporting('E_ALL');
 |
 |
 */
-define('BASE_FOLDER', '/learn/pms_ci' );
+define('BASE_FOLDER', '/learn/pms_codeigniter' );
 define('HTTP_PATH', 'http://' . $_SERVER['HTTP_HOST'] . BASE_FOLDER );
 define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT'] . BASE_FOLDER);
 define('ASSETS_PATH', HTTP_PATH. '/assets');
