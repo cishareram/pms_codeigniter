@@ -63,20 +63,16 @@ class Products extends CI_Controller {
 		$title 			= $this -> input -> post('title');
 		$price 			= $this -> input -> post('price');
 		$description		= $this -> input -> post('description');
-		
+		$file_name			= $_FILES['file']['name'];
 		$file			= $_FILES['file'];
 		
-		//$file			= $_FILES['file']['name'];
-		//$temp			= $_FILES['file']['temp'];
-		
 		$config['upload_path'] = UPLOAD_ROOT_PATH ;
-		//$config['upload_url'] = $temp;
 		$config['allowed_types'] = 'gif|jpg|png|jpeg';
 		$config['max_size'] = '50000';
 		$config['max_width'] = '1024';
 		$config['max_height'] = '768';
-		//$config['image_width']  = $width;
-		//$config['image_height'] = $height;
+		$config['image_width']  = 150;
+		$config['image_height'] = 150;
 		
 		$this->load->library('upload', $config);
 
