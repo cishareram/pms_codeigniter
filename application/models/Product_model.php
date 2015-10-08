@@ -6,7 +6,7 @@ class Product_model extends CI_Model {
     {
 	
 	
-	$this->db->select('p.id, p.title, p.description, p.price, p.created_on, p.updated_on, p.is_enabled,
+	$this->db->select('p.id, p.title, p.product_image, p.description, p.price, p.created_on, p.updated_on, p.is_enabled,
 			pc.id as product_category_id');
 	
 	$this->db->from('products as p');

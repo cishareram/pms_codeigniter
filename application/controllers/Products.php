@@ -63,44 +63,38 @@ class Products extends CI_Controller {
 		$title 			= $this -> input -> post('title');
 		$price 			= $this -> input -> post('price');
 		$description		= $this -> input -> post('description');
-		$file_name			= $_FILES['file']['name'];
-		$file			= $_FILES['file'];
+		$file_name		= $_FILES['file']['name'];
+		//$file			= $_FILES['file'];
 		
 		$config['upload_path'] = UPLOAD_ROOT_PATH ;
 		$config['allowed_types'] = 'gif|jpg|png|jpeg';
 		$config['max_size'] = '50000';
 		$config['max_width'] = '1024';
 		$config['max_height'] = '768';
-		$config['image_width']  = 150;
-		$config['image_height'] = 150;
+		//$config['image_width']  = 150;
+		//$config['image_height'] = 150;
 		
 		$this->load->library('upload', $config);
-
+		
 		if ( ! $this->upload->do_upload( 'file' ))
 		{
-		    print_r($this->upload->display_errors());
+		    $this->session->set_flashdata('error','error inj file uploading');
+		    redirect(site_url('/products/add'));
 		}
 		else
 		{
-		    $data = array('upload_data' => $this->upload->data());
-		    print_r($data);
-		}
-	    
-		
-		
-		
-		die;
-		
-		if ($upload && !empty($title) && !empty($price) && !empty($description) && !empty($product_category_id) )
-		{
-		    $insert_data	= array( 'product_category_id' => $product_category_id, 'title' => $title, 'product_image' => $file, 'description' => $description, 'price' => $price); 
-		    if($this->Product_model->add( $insert_data))
+		    if (!empty($title) && !empty($price) && !empty($description) && !empty($product_category_id) )
 		    {
-			$this->session->set_flashdata('success','record added successfully');
-			redirect($site_url);
+			$data = array('upload_data' => $this->upload->data());
+			print_r($data);
+			$insert_data	= array( 'product_category_id' => $product_category_id, 'title' => $title, 'product_image' => $file_name, 'description' => $description, 'price' => $price); 
+			if($this->Product_model->add( $insert_data))
+			{
+			    $this->session->set_flashdata('success','record added successfully');
+			    redirect($site_url);
+			}
 		    }
 		}
-		
 	    } 
 	    
 	    $this->load->view('/layouts/header', $data);

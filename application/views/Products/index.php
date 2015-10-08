@@ -96,7 +96,15 @@
 				    <?php echo $result->title; ?>
 				</td>
 				
-				<td>
+				<td class = "<?php echo $gray_class; ?>" >
+				    <?php $file_exists =''; ?>
+				    <?php $file_exists = $result->product_image;?>
+				   
+				   <?php if( file_exists( UPLOAD_ROOT_PATH.$file_exists )) { ?>
+					<img src ="<?php echo UPLOAD_PATH.$file_exists; ?>" class="img-thumbnail" height="100px" width="100px"/ >
+				    <?php }else {  ?>
+					<img src = "<?php echo UPLOAD_PATH.'default.jpeg' ?>" class="img-thumbnail" height="100px" width="100px" />
+				    <?php }?>
 				</td>
 				
 				<td class = "<?php echo $gray_class; ?>" > 
@@ -120,11 +128,11 @@
                                  	
 					<?php  if($result->is_enabled) { ?>
 					    
-					    <img src = "<?php echo ASSETS_PATH;?>/images/enable.png"  height="24px" width="24px" title="Disable"/>
+					    <img src = "<?php echo ASSETS_PATH;?>/images/enable.png"  title="Disable"/>
 				      
 					<?php }else { ?>
 					    
-					    <img src = "<?php echo ASSETS_PATH;?>/images/disable.png" height="24px" width="24px" title="Enable"/>
+					    <img src = "<?php echo ASSETS_PATH;?>/images/disable.png"  title="Enable"/>
 					<?php }?>
 					
 				    </a>
