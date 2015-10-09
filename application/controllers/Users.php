@@ -53,7 +53,6 @@ class Users extends CI_Controller {
 		'username'	=> $result->username,
 		'password'	=> $result->password,
 	    );
-	    print_r($sessiondata);
 	    $this->session->set_userdata($sessiondata);
 	    return true;
 	}
@@ -75,33 +74,72 @@ class Users extends CI_Controller {
 	    }
 	    else
 	    {
+		$email 	= $this -> input -> post('email');
+		//$config['protocol'] = 'smtp';
+		//$config['smtp_host'] = 'smtp.googlemail.com';
 		
-		$this->load->library('email');
+		//$config['smtp_port'] = 465;
+		//
+		//$config['charset'] = 'iso-8859-1';
+		//$config['wordwrap'] = TRUE;
 		
-		$config['protocol'] = 'smtp';
-		$config['smtp_host'] = 'smtp.cisinlabs.com';
-		$config['smtp_user'] = 'hareram.p@cisinlabs.com';
-		$config['smtp_pass'] = 'aPGs37djkt';
-		$config['smtp_port'] = 25;
+		$config['protocol'] = "smtp";
 		
-		$config['charset'] = 'iso-8859-1';
-		$config['wordwrap'] = TRUE;
+		$config['smtp_host'] = "ssl://smtp.cisinlabs.com";
+		$config['smtp_port'] = "465";
 		
-		$this->email->initialize($config);
+		//$config['smtp_user'] = 'hareram.p@cisinlabs.com';
+		//$config['smtp_pass'] = 'aPGs7djkt3';
+		
+		$config['smtp_user'] = "vikas.b@cisinlabs.com"; 
+		$config['smtp_pass'] = "fP6ZS6HD";
+		
+		$config['charset'] = "utf-8";
+		$config['mailtype'] = "html";
+		$config['newline'] = "\r\n";
+		
+		$this->load->library('email', $config);
+		
+		//$this->email->initialize($config);
 		
 		$this->email->from('hareram.p@cisinlabs.com', 'Hareram');
-		$this->email->to('hareram.p@cisinlabs.com');  
+		$this->email->to('hareram@mailinator.com');  
 		
-		$this->email->subject('Email Test');
-		$this->email->message('Testing the email.');	
-		
-		$this->email->send();
-		
-		echo $this->email->print_debugger();
+		$this->email->subject('Reset your Password');
 		
 		
-		//$this->session->set_flashdata('success','please check Email and change password');
-		//redirect(site_url('users'));
+		$possibleChars = "abcdefghijklmnopqrstuvwxyz";
+		
+		$activation_code = '';
+		for($i = 0; $i < 8; $i++)
+		{
+		    $rand = rand(0, strlen($possibleChars) - 1);
+		    $activation_code .= substr($possibleChars, $rand, 1);
+		    $activation_code .= time();
+		}
+		
+		$message = "<p>This email has been sent as a request to reset our password</p>";
+		$message .= "<p><a href='".site_url('/users/reset_password/'.$activation_code)."'>Click here </a>if you want to reset your password,
+                        if not, then ignore</p>";
+		
+		$this->email->message($message);
+		$this->email->set_newline("\r\n");
+		
+		if($this->email->send())
+		{
+		    if($this->User_model->insert_activation_code($activation_code, $email))
+		    {
+			$this->session->set_flashdata('success','activation code has been send, please check your email ');
+			redirect(site_url('users'));
+		    }
+		}
+		else
+		{
+		    $this->session->set_flashdata('error','unable to send email ');
+		    redirect(site_url('users/verify_email'));
+		    echo $this->email->print_debugger();
+		}
+		
 	    }
 	}
 	
@@ -112,7 +150,8 @@ class Users extends CI_Controller {
     
     public function check_email($email)
     {
-	$result		= $this->User_model->find('',$email);
+	$set_data	= array('email' => $email);
+	$result		= $this->User_model->find($set_data);
 	
 	if(empty($result))
 	{
@@ -124,6 +163,49 @@ class Users extends CI_Controller {
 	}
     }
     
+    public function reset_password($activation_code)
+    {
+	$set_data	= array('activation_code' => $activation_code);
+	$result = $this->User_model->find($set_data);
+	$email  = $result->email;
+	if( !empty($result) )
+	{
+	    $data['title'] 		= 'Reset Password';
+	    $data['site_url']	= site_url('users/index');
+	    $this->load->library('encrypt');
+	    //$this->form_validation->set_rules('username', 'Username', 'trim|required|callback_check_username[username]');
+	    $this->form_validation->set_rules('password', 'Password', 'required');
+	    $this->form_validation->set_rules('cpassword', 'Cpassword', 'required');
+	    
+	    if( count( $_POST ) > 0 )
+	    {
+		if ($this->form_validation->run())
+		{
+		    $password   = $this->input->post('password'); 
+		    $set_data	= array('password' => $password);
+		    if($this->User_model->update_password($set_data, $email))
+		    {
+			$this->session->set_flashdata('success','password reset successfully');
+			redirect(site_url('users'));
+		    }
+		}
+		else
+		{
+		    $this->session->set_flashdata('error','please enter valid or password ');
+		    redirect(site_url('/users'));
+		}
+	    }
+	    $this->load->view('/layouts/header', $data);
+	    $this->load->view('Users/reset_password');
+	    $this->load->view('/layouts/footer');
+	}
+	else
+	{
+	    $this->session->set_flashdata('error','invalid activation code, please resend the activation code ');
+	    redirect(site_url('/users/verify_email'));
+	}
+	
+    }
     
     public function logout()
     {

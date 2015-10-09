@@ -117,6 +117,12 @@
 				password: {
 				    required: true,
 				},
+				cpassword: {
+				    required: true,
+				    equalTo: "#password",
+				    //minlength: 6,
+				    //maxlength: 10
+				},
 				price: {
 				    required: true,
 				},
@@ -144,7 +150,11 @@
 				    
 				},
 				password: {
-				    required: "Please enter password"
+				    required: "Please enter confirm password"
+				},
+				cpassword: {
+				    required: "Please confirm password",
+				    equalTo: "Please enter the same password as above",
 				},
 				price: {
 				    required: "Please enter price"
@@ -175,7 +185,7 @@
 			    $(element).parent("div.col-sm-6").removeClass(errorClass).addClass(validClass);
 			    //$(element).siblings("p").addClass(validClass);
 			    $(element).siblings("p").removeClass(errorClass);
-			}
+			},
 			
 		});
 		
