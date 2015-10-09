@@ -2,11 +2,19 @@
 
 class User_model extends CI_Model {
 
-    public function find($username)
+    public function find($set_data = '', $email = '')
     {
-	$this->db->select('username, password');
+	$this->db->select('*');    
 	$this->db->from('users');
-	$this->db->where('username', $username);
+	
+	if(!empty($set_data))
+	{
+	    $this->db->where($set_data);    
+	}
+	else
+	{
+	    $this->db->where('email', $email);
+	}
 	
 	$query = $this->db->get();
 	

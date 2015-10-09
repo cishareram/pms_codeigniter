@@ -64,15 +64,29 @@ class Products extends CI_Controller {
 		$price 			= $this -> input -> post('price');
 		$description		= $this -> input -> post('description');
 		$file_name		= $_FILES['file']['name'];
-		//$file			= $_FILES['file'];
 		
 		$config['upload_path'] = UPLOAD_ROOT_PATH ;
 		$config['allowed_types'] = 'gif|jpg|png|jpeg';
 		$config['max_size'] = '50000';
 		$config['max_width'] = '1024';
 		$config['max_height'] = '768';
-		//$config['image_width']  = 150;
-		//$config['image_height'] = 150;
+		
+		//$config['image_library'] = 'gd2';
+		//$config['source_image'] = UPLOAD_ROOT_PATH.'download.jpg';
+		//$config['create_thumb'] = TRUE;
+		//$config['maintain_ratio'] = TRUE;
+		//$config['width'] = 75;
+		//$config['height'] = 50;
+		//
+		//$this->load->library('image_lib', $config);
+		//
+		//if($this->image_lib->resize())
+		//{
+		//    print_r($this->image_lib->resize());   
+		//}else{
+		//    echo $this->image_lib->display_errors();
+		//}
+		//die;
 		
 		$this->load->library('upload', $config);
 		

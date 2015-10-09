@@ -128,13 +128,12 @@
 				},
 				email: {
 				    required: true,
-				    email: true
 				},
 				topic: {
 				    required: "#newsletter:checked",
-				    minlength: 2
+				    minlength: 2,
 				},
-				agree: "required"
+				agree: "required",
 			},
 			messages: {
 				
@@ -155,7 +154,10 @@
 				},
 				file:{
 				    required: "please select file",  
-				}
+				},
+				email:{
+				    required: "please enter email id",  
+				},
 			},
 			
 			errorElement: "p",
