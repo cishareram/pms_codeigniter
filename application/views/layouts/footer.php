@@ -116,12 +116,12 @@
 				},
 				password: {
 				    required: true,
+				    minlength: 6,
 				},
 				cpassword: {
 				    required: true,
 				    equalTo: "#password",
-				    //minlength: 6,
-				    //maxlength: 10
+				    minlength: 6,
 				},
 				price: {
 				    required: true,
